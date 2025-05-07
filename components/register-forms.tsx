@@ -33,7 +33,7 @@ export function RegisterForm({ className, ...props }) {
       setError(null);
 
       // Enviar os dados para o backend
-      const response = await fetch("http://localhost:3001/api/users", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APIBASEURL}/api/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -43,32 +43,41 @@ export function RegisterForm({ className, ...props }) {
 
         }),
       });
+      // Verificar a resposta do backend
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Register-forms: Erro ao registrar usuário");
+      }
+      const data = await response.json();
 
-      const respon = await fetch("http://localhost:3001/api/profiles", {
+      const userId = data.userId;
+      
+      const respon = await fetch(`${process.env.NEXT_PUBLIC_APIBASEURL}/api/profiles`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          bio,
-          avatarUrl,
-          location,
-          age: age ? parseInt(age, 10) : undefined, // Converte idade para número ou deixa undefined
+          userId: userId,
+          bio: bio,
+          avatarUrl: avatarUrl,
+          location: location,
+          //age: age,
         }),
       });
 
       // Verificar a resposta do backend
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Erro ao registrar usuário");
+      if (!respon.ok) {
+        const errorData = await respon.json();
+        throw new Error(errorData.message || "Register-forms: Erro ao registrar perfil");
       }
 
-      const data = await response.json();
+      
       console.log("Usuário registrado com sucesso:", data);
 
       // Redirecionar ou exibir mensagem de sucesso
       alert("Cadastro realizado com sucesso! Verifique seu email para confirmar.");
       window.location.href = "/login"; // Redireciona para a página de login
     } catch (err) {
-      setError(err.message || "Erro ao processar o cadastro.");
+      setError(err.message || "Register-forms: Erro ao processar o cadastro.");
     } finally {
       setLoading(false);
     }
@@ -153,7 +162,7 @@ export function RegisterForm({ className, ...props }) {
           <Label htmlFor="age">Idade</Label>
           <Input
             id="age"
-            type="number"
+            type="text"
             placeholder="25"
             value={age}
             onChange={(e) => setAge(e.target.value)}
