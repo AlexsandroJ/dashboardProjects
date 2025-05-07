@@ -39,7 +39,7 @@ export function LoginForm({ className, ...props }) {
       
 
       // Redirecionar para o dashboard após o login bem-sucedido
-      window.location.href = "/protegida";
+      window.location.href = "/";
     } catch (err) {
       setError(err.message || "Erro ao processar o login.");
     } finally {
@@ -115,12 +115,7 @@ export function LoginForm({ className, ...props }) {
           Login com GitHub
         </Button>
       </div>
-      <div className="text-center text-sm">
-        Não tem uma conta?{" "}
-        <a href="/register" className="underline underline-offset-4">
-          Cadastre-se
-        </a>
-      </div>
+      
     </form>
   );
 }

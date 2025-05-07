@@ -34,8 +34,9 @@ import { OverviewLoader } from "@/components/overview-loader";
 import { RecentSalesLoader } from "@/components/recent-sales-loader";
 import { TransactionsLoader } from "@/components/transactions-loader";
 
-import DataInterface from '../components/dataLists/DataInterface';
-import FormAddCategory from '../components/dataLists/FormAddCategory';
+import DataInterface from '@/components/dataLists/DataInterface';
+
+import ProtectedLayout from "@/components/ProtectedLayout";
 
 // swap layout is a client side component, since it uses local storage for this demo.
 // In production you might want to save the layout order on server via api call
@@ -49,32 +50,33 @@ export default function Home() {
   return (
 
     <main className="flex min-h-screen flex-col items-center justify-between p-y-4">
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarTrigger />
-        <div className="flex-col flex max-w-7xl w-full mx-auto">
-          <div className="border-b">
-            <div className="flex h-16 items-center px-4">
-              {/*<TeamSwitcher />*/}
-              <MainNav className="mx-6" />
-              <div className="ml-auto flex items-center space-x-4">
-                <ModeToggle />
-                {/*<Search />*/}
-                <UserNav />
+      <ProtectedLayout>
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarTrigger />
+          <div className="flex-col flex max-w-7xl w-full mx-auto">
+            <div className="border-b">
+              <div className="flex h-16 items-center px-4">
+                {/*<TeamSwitcher />*/}
+                <MainNav className="mx-6" />
+                <div className="ml-auto flex items-center space-x-4">
+                  <ModeToggle />
+                  {/*<Search />*/}
+                  <UserNav />
+                </div>
               </div>
             </div>
-          </div>
-          <div className="flex-1 space-y-4 p-8 pt-6">
-            <div className="flex items-center justify-between space-y-2 flex-wrap">
-              <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-              <div className="flex items-center space-x-2">
-                {/*<CalendarDateRangePicker />
+            <div className="flex-1 space-y-4 p-8 pt-6">
+              <div className="flex items-center justify-between space-y-2 flex-wrap">
+                <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+                <div className="flex items-center space-x-2">
+                  {/*<CalendarDateRangePicker />
               <Button data-cy="meu-botao" >Download</Button>*/}
+                </div>
               </div>
-            </div>
-            
-            <DataInterface />
-            {/*
+
+              <DataInterface />
+              {/*
             <SwapLayout
               defaultEditing={false}
               sections={initialSwapSections}
@@ -82,9 +84,10 @@ export default function Home() {
               className="w-full grid grid-cols-2 grid-rows-5 gap-8"
             />
             */}
+            </div>
           </div>
-        </div>
-      </SidebarProvider>
+        </SidebarProvider>
+      </ProtectedLayout>
     </main>
   );
 }

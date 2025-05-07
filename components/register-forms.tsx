@@ -75,7 +75,7 @@ export function RegisterForm({ className, ...props }) {
 
       // Redirecionar ou exibir mensagem de sucesso
       alert("Cadastro realizado com sucesso! Verifique seu email para confirmar.");
-      window.location.href = "/login"; // Redireciona para a página de login
+      window.location.href = "/auth"; // Redireciona para a página de login
     } catch (err) {
       setError(err.message || "Register-forms: Erro ao processar o cadastro.");
     } finally {
