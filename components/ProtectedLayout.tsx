@@ -30,6 +30,7 @@ export default async function ProtectedLayout({
   const auth = await isAuthenticated();
 
   if (!auth) {
+    console.log("Não credenciado");
     redirect("/auth");
   }
 

@@ -1,183 +1,159 @@
-'use client'; // Marca o componente como Client Component
+import React, { Suspense } from "react";
+import dynamic from "next/dynamic";
 
-import React, { useState } from "react";
+// navigation components
+import { UserNav } from "@/components/user-nav";
+import { MainNav } from "@/components/main-nav";
+import { CalendarDateRangePicker } from "@/components/date-range-picker";
+import { ModeToggle } from "@/components/toggle_between_light_dark"
+// basic components
 import { Button } from "@/components/ui/button";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-const MyComponent = () => {
-  const [category, setCategory] = useState({
-    category: "Example Category",
-    intens: [
-      { type: "Type 1", value: "100", description: "Desc 1", available: true, image: "favicon.ico" },
-      { type: "Type 2", value: "200", description: "Desc 2", available: false, image: null },
-    ],
-  });
+// high level components
+import { Search } from "@/components/search";
+import { TeamSwitcher } from "@/components/team-switcher";
+import { RecentSales } from "@/components/recent-sales";
+import { Transactions } from "@/components/transactions";
+import { Stats } from "@/components/stats";
+import { Overview } from "@/components/overview";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 
-  // Estado para controlar qual item está sendo editado
-  const [editingIndex, setEditingIndex] = useState(null);
 
-  // Função para iniciar a edição
-  const startEditing = (index) => {
-    setEditingIndex(index);
-  };
+// Skeleton loaders
+import { StatsLoader } from "@/components/stats-loader";
+import { SwapLayoutLoader } from "@/components/swap-layout-loader";
+import { OverviewLoader } from "@/components/overview-loader";
+import { RecentSalesLoader } from "@/components/recent-sales-loader";
+import { TransactionsLoader } from "@/components/transactions-loader";
 
-  // Função para salvar as alterações
-  const saveChanges = async (index) => {
-    setEditingIndex(null); // Sai do modo de edição
+import DataInterface from '@/components/dataLists/DataInterface';
 
-    // Envie os dados atualizados para o backend (opcional)
-    try {
-      const updatedItem = category.intens[index];
-      console.log("Enviando dados para o backend:", updatedItem);
+import ProtectedLayout from "@/components/ProtectedLayout";
 
-      // Exemplo de chamada à API
-      // await fetch('/api/update-item', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(updatedItem),
-      // });
-    } catch (error) {
-      console.error("Erro ao salvar no backend:", error);
-    }
-  };
+// swap layout is a client side component, since it uses local storage for this demo.
+// In production you might want to save the layout order on server via api call
+const SwapLayout = dynamic(() => import("@/components/swap-layout"), {
+  ssr: false,
+  loading: () => <SwapLayoutLoader />,
+});
 
-  // Função para remover um item
-  const handleRemoveItem = (index) => {
-    const updatedItems = category.intens.filter((_, i) => i !== index);
-    setCategory({ ...category, intens: updatedItems });
-  };
-
-  // Função para atualizar os dados no estado
-  const handleChange = (e, field, index) => {
-    const updatedItems = [...category.intens];
-    updatedItems[index][field] = e.target.value;
-    setCategory({ ...category, intens: updatedItems });
-  };
-
+// This is the main page of the app.
+export default function Home() {
   return (
-    <div>
-      {/* Título da Categoria */}
-      <h2 className="text-xl font-semibold mt-6 mb-2">
-        {category.category || "Uncategorized"}
-      </h2>
 
-      {/* Tabela Dinâmica */}
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead style={{ width: '150px', textAlign: 'left' }}>Type</TableHead>
-              <TableHead style={{ width: '100px', textAlign: 'center' }}>Value</TableHead>
-              <TableHead style={{ width: '200px', textAlign: 'left' }}>Description</TableHead>
-              <TableHead style={{ width: '100px', textAlign: 'center' }}>Status</TableHead>
-              <TableHead style={{ width: '100px', alignContent: 'center' }}>Image</TableHead>
-              <TableHead style={{ width: '150px', textAlign: 'center' }}>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {category.intens.map((item, index) => (
-              <TableRow key={index}>
-                {/* Campo Editável: Type */}
-                <TableCell style={{ textAlign: 'left' }}>
-                  {editingIndex === index ? (
-                    <input
-                      type="text"
-                      value={item.type}
-                      onChange={(e) => handleChange(e, "type", index)}
-                      className="border rounded px-2 py-1 w-full"
-                    />
-                  ) : (
-                    item.type
-                  )}
-                </TableCell>
+    <main className="flex min-h-screen flex-col items-center justify-between p-y-4">
+     
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarTrigger />
+          <div className="flex-col flex max-w-7xl w-full mx-auto">
+            <div className="border-b">
+              <div className="flex h-16 items-center px-4">
+                {/*<TeamSwitcher />*/}
+                <MainNav className="mx-6" />
+                <div className="ml-auto flex items-center space-x-4">
+                  <ModeToggle />
+                  {/*<Search />*/}
+                  <UserNav />
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 space-y-4 p-8 pt-6">
+              <div className="flex items-center justify-between space-y-2 flex-wrap">
+                <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+                <div className="flex items-center space-x-2">
+                  {/*<CalendarDateRangePicker />
+              <Button data-cy="meu-botao" >Download</Button>*/}
+                </div>
+              </div>
 
-                {/* Campo Editável: Value */}
-                <TableCell style={{ textAlign: 'center' }}>
-                  {editingIndex === index ? (
-                    <input
-                      type="text"
-                      value={item.value}
-                      onChange={(e) => handleChange(e, "value", index)}
-                      className="border rounded px-2 py-1 w-full"
-                    />
-                  ) : (
-                    item.value
-                  )}
-                </TableCell>
-
-                {/* Campo Editável: Description */}
-                <TableCell style={{ textAlign: 'left' }}>
-                  {editingIndex === index ? (
-                    <input
-                      type="text"
-                      value={item.description}
-                      onChange={(e) => handleChange(e, "description", index)}
-                      className="border rounded px-2 py-1 w-full"
-                    />
-                  ) : (
-                    item.description
-                  )}
-                </TableCell>
-
-                {/* Status (não editável neste exemplo) */}
-                <TableCell style={{ textAlign: 'center' }}>
-                  <Badge
-                    className="text-xs"
-                    variant={item.available ? "default" : "destructive"}
-                  >
-                    {item.available ? "Available" : "Unavailable"}
-                  </Badge>
-                </TableCell>
-
-                {/* Imagem (não editável neste exemplo) */}
-                <TableCell style={{ alignItems: 'center' }}>
-                  {item.image ? (
-                    <img
-                      src={item.image}
-                      alt={item.type}
-                      className="w-10 h-10 object-cover rounded"
-                    />
-                  ) : (
-                    "No Image"
-                  )}
-                </TableCell>
-
-                {/* Ações */}
-                <TableCell style={{ textAlign: 'center' }}>
-                  {editingIndex === index ? (
-                    <Button
-                      onClick={() => saveChanges(index)}
-                      variant="default"
-                      size="sm"
-                    >
-                      Save
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => startEditing(index)}
-                      variant="outline"
-                      size="sm"
-                    >
-                      Edit
-                    </Button>
-                  )}
-                  <Button
-                    onClick={() => handleRemoveItem(index)}
-                    variant="destructive"
-                    size="sm"
-                    className="ml-2"
-                  >
-                    Remove
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
+              <DataInterface />
+              {/*
+            <SwapLayout
+              defaultEditing={false}
+              sections={initialSwapSections}
+              sectionSlotClassNames={sectionSlotClassNames}
+              className="w-full grid grid-cols-2 grid-rows-5 gap-8"
+            />
+            */}
+            </div>
+          </div>
+        </SidebarProvider>
+      
+    </main>
   );
+}
+
+// this is the initial layout of the swap layout.
+const initialSwapSections = {
+  top: (
+    <Card className="flex-grow h-full">
+      <CardHeader>
+        <CardTitle>Stats</CardTitle>
+      </CardHeader>
+      <CardContent className="pl-2">
+        <Suspense key={"stats"} fallback={<StatsLoader />}>
+          <Stats />
+        </Suspense>
+      </CardContent>
+    </Card>
+  ),
+  center_left: (
+    <Card className="flex-grow h-full">
+      <CardHeader>
+        <CardTitle>Overview</CardTitle>
+      </CardHeader>
+      <CardContent className="pl-2">
+        <Suspense key={"overview"} fallback={<OverviewLoader />}>
+          <Overview />
+        </Suspense>
+      </CardContent>
+    </Card>
+  ),
+  center_right: (
+    <Card className="flex-grow h-full">
+      <CardHeader>
+        <CardTitle>Recent Sales</CardTitle>
+        <CardDescription>You made 265 sales this month.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Suspense key={"recent-sales"} fallback={<RecentSalesLoader />}>
+          <RecentSales />
+        </Suspense>
+      </CardContent>
+    </Card>
+  ),
+  bottom: (
+    <Card className="flex-grow h-full">
+      <CardHeader className="flex flex-row items-center">
+        <div className="grid gap-2">
+          <CardTitle>Transactions</CardTitle>
+          <CardDescription>
+            Recent transactions from your store.
+          </CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <Suspense key={"transactions"} fallback={<TransactionsLoader />}>
+          <Transactions />
+        </Suspense>
+      </CardContent>
+    </Card>
+  ),
 };
 
-export default MyComponent;
+// this is the class names for the sections of the swap layout.
+const sectionSlotClassNames = {
+  "1": "col-span-2 row-span-1 h-full w-full flex flex-col",
+  "2": "col-span-1 row-span-2 h-full w-full flex flex-col",
+  "3": "col-span-1 row-span-2 h-full w-full flex flex-col",
+  "4": "col-span-2 row-span-2 h-full w-full flex flex-col",
+};

@@ -28,7 +28,7 @@ export default function LoginPage() {
       const data = await response.json();
       // Salvar o token no localStorage (ou cookies)
       localStorage.setItem('token', data.token);
-      window.location.href = '/'; // Redirecionar para o dashboard
+      window.location.href = '/protegida'; // Redirecionar para o dashboard
     } catch (err) {
       setError('Erro ao processar a solicitação');
     }

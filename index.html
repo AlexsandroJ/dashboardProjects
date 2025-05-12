@@ -38,11 +38,13 @@
   <button onclick="sendMessage()">Enviar</button>
 
   <script>
-    const apiKey = "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"; // Substitua por sua chave
+    const apiKey = "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";
+    //const apiKey = "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"; // Substitua por sua chave
     const chatDiv = document.getElementById("chat");
 
     let chatHistory = [
-      { role: "system", content: "Você é um assistente de vendas amigável. Pergunte nome, endereço e produtos desejados. Quando tiver tudo, diga 'Obrigado, os dados foram confirmados!'." }
+      { role: "system", content: `Você é um assistente de vendas amigável de uma pizzaria. Pergunte nome, endereço e sabor de pizza desejados. 
+      Apos ler os dados com o cliente, confirme os dados e apos a confirmação, diga 'Obrigado, os dados foram confirmados!'.` }
     ];
 
     // Dados do cliente coletados
@@ -72,12 +74,11 @@
             "X-Title": "extrator-de-dados"
           },
           body: JSON.stringify({
-            model: "meta-llama/llama-4-scout:free",
+            model: "qwen/qwen3-4b:free",
             messages: [
               {
                 role: "system",
                 content: `Você é um extrator de informações. A partir do histórico da conversa abaixo, extraia os seguintes campos:
-
 {
   "nome": "extraia o nome do cliente se disponível",
   "endereco": "extraia o endereço do cliente se disponível",
@@ -100,13 +101,16 @@ Retorne APENAS o JSON com os campos preenchidos quando possível.`
         const extractedText = data.choices[0].message.content.trim();
 
         let extractedData = {};
+        extractedData = JSON.parse(extractedText);
+        console.log(extractedText);
+        /*
         try {
           extractedData = JSON.parse(extractedText);
         } catch (e) {
           console.error("Falha ao analisar JSON:", extractedText);
           return {};
         }
-
+        */
         return extractedData;
 
       } catch (error) {
@@ -134,9 +138,9 @@ Retorne APENAS o JSON com os campos preenchidos quando possível.`
             "X-Title": "agente-de-vendas-ia"
           },
           body: JSON.stringify({
-            model: "meta-llama/llama-4-scout:free",
-            messages: chatHistory,
-            temperature: 0.7
+            model: "qwen/qwen3-4b:free",
+            messages: chatHistory
+            
           })
         });
 

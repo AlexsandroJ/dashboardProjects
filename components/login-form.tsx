@@ -19,29 +19,26 @@ export function LoginForm({ className, ...props }) {
     setError(null); // Limpa erros anteriores
     setLoading(true);
 
-    try {
-      // Enviar as credenciais para a API
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APIBASEURL}/api/sessions/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+     try {
+      // Enviar credenciais para o backend (substitua a URL pelo seu endpoint)
+      const response = await fetch('http://localhost:3001/api/sessions/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Credenciais inválidas");
+        setError(errorData.message || 'Falha no login');
+        return;
       }
 
       const data = await response.json();
-
-      // Salvar o token no localStorage ou cookies
-      localStorage.setItem("token", data.token);
-      
-
-      // Redirecionar para o dashboard após o login bem-sucedido
-      window.location.href = "/";
+      // Salvar o token no localStorage (ou cookies)
+      localStorage.setItem('token', data.token);
+      window.location.href = '/protegida'; // Redirecionar para o dashboard
     } catch (err) {
-      setError(err.message || "Erro ao processar o login.");
+      setError('Erro ao processar a solicitação');
     } finally {
       setLoading(false);
     }
