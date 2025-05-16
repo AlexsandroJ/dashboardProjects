@@ -34,9 +34,9 @@ import { OverviewLoader } from "@/components/overview-loader";
 import { RecentSalesLoader } from "@/components/recent-sales-loader";
 import { TransactionsLoader } from "@/components/transactions-loader";
 
-import DataInterface from '@/components/dataLists/DataInterface';
+import DataInterface from '@/components/dataLists/DataInterfaceANTIGO';
 
-import ProtectedLayout from "@/components/ProtectedLayout";
+import ProtectedLayout from "@/components/ProtectedRoute";
 
 // swap layout is a client side component, since it uses local storage for this demo.
 // In production you might want to save the layout order on server via api call

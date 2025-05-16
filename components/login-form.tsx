@@ -36,7 +36,9 @@ export function LoginForm({ className, ...props }) {
       const data = await response.json();
       // Salvar o token no localStorage (ou cookies)
       localStorage.setItem('token', data.token);
-      window.location.href = '/protegida'; // Redirecionar para o dashboard
+      localStorage.setItem('userId', data.userId);
+      //console.log( data.token,data.userId )
+      window.location.href = '/manage'; // Redirecionar para o dashboard
     } catch (err) {
       setError('Erro ao processar a solicitação');
     } finally {
