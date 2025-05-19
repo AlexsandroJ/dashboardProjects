@@ -5,7 +5,7 @@ import AddCategoryForm from "./Category/AddCategoryForm";
 import AddCityForm from "./City/AddCityForm";
 import CategoryItem from "./Category/CategoryItem";
 import CityItem from "./City/CityItem";
-import HelpTooltip from "../HelpTooltip"; // ajuste o caminho se necessário
+import HelpTooltip from "../HelpTooltip"; 
 
 import {
   City,
