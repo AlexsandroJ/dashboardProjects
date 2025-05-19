@@ -1,90 +1,58 @@
-// pages/index.js
-import Head from 'next/head';
-import PlanCard from '../../components/plan/PlanCard';
+import React, { Suspense } from "react";
+// navigation components
+import { UserNav } from "@/components/user-nav";
+import { MainNav } from "@/components/main-nav";
 
-export default function Home() {
-  const plans = [
-    {
-      title: 'Plano Básico',
-      price: 149,
-      features: [
-        { count: '1', label: 'Chatbot com menus interativos' },
-        { count: 'Ilimitado', label: 'Conversas e atendimento automatizado' },
-        { count: '50', label: 'Clientes Simultaneos' },
-        { count: 'Personalizável', label: 'Sistema personalizável' },
-      ],
-      buttonLabel: 'Escolher Plano',
-      className: 'bg-green-500 text-white',
-    },
-    {
-      title: 'Plano Corporativo',
-      price: 490,
-      features: [
-        { count: '5', label: 'Chatbots com menus interativos' },
-        { count: 'Ilimitado', label: 'Conversas e atendimento automatizado' },
-        { count: '100', label: 'Clientes Simultaneos' },
-        { count: 'Personalizável', label: 'Sistema personalizável' },
-      ],
-      buttonLabel: 'Escolher Plano',
-      className: 'bg-orange-500 text-white',
-    },
-    {
-      title: 'Plano IA Premium',
-      price: 599,
-      features: [
-        { count: '1', label: 'Chatbot com IA avançada' },
-        { count: 'Ilimitado', label: 'Conversas e atendimento automatizado' },
-        { count: '50', label: 'Clientes Simultaneos' },
-        { count: 'Personalizável', label: 'Sistema personalizável' },
-      ],
-      buttonLabel: 'Escolher Plano',
-      className: 'bg-yellow-500 text-white',
-    },
-    {
-      title: 'Plano Médio',
-      price: 2999,
-      features: [
-        { count: '5', label: 'Chatbots com menus interativos' },
-        { count: 'Ilimitado', label: 'Conversas e atendimento automatizado' },
-        { count: '50', label: 'Clientes Simultaneos' },
-        { count: 'Personalizável', label: 'Sistema personalizável' },
-      ],
-      buttonLabel: 'Escolher Plano',
-      className: 'bg-purple-500 text-white',
-    },
-  ];
+import { ModeToggle } from "@/components/toggle_between_light_dark"
 
-  return (
-    <>
-      <Head>
-        <title>Planos de Serviços | Empresa XYZ</title>
-      </Head>
+// high level components
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 
-      <main className="max-w-6xl mx-auto p-6">
-        {/* Título da Seção */}
-        <section className="mb-10">
-          <h1 className="text-3xl font-bold text-center mb-4">
-            Escolha o Plano Ideal para Você
-          </h1>
-          <p className="text-center text-gray-600">
-            Encontre o plano que melhor se adapta às suas necessidades.
-          </p>
-        </section>
+import PlanPage from '@/components/plan/PlanPage';
 
-        {/* Grid de Planos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {plans.map((plan, index) => (
-            <PlanCard
-              key={index}
-              title={plan.title}
-              price={plan.price}
-              features={plan.features}
-              buttonLabel={plan.buttonLabel}
-              className={plan.className}
-            />
-          ))}
-        </div>
-      </main>
-    </>
-  );
+
+import ProtectedComponent from "@/components/ProtectedComponent";
+import { UserProvider } from "@/components/dataLists/UserContext.tsx";
+
+
+// This is the main page of the app.
+export default function Plan() {
+
+    return (
+
+        <main className="flex min-h-screen flex-col items-center justify-between p-y-4">
+            <ProtectedComponent>
+                <SidebarProvider>
+                    <UserProvider>
+                        <AppSidebar />
+                        <SidebarTrigger />
+
+                        <div className="flex-col flex max-w-7xl w-full mx-auto">
+                            <div className="border-b">
+                                <div className="flex h-16 items-center px-4">
+                                    {/*<TeamSwitcher />*/}
+                                    <MainNav className="mx-6" />
+                                    <div className="ml-auto flex items-center space-x-4">
+                                        <ModeToggle />
+                                        {/*<Search />*/}
+                                        <UserNav />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-1 space-y-4 p-8 pt-6">
+                                <div className="flex items-center justify-between space-y-2 flex-wrap">
+
+                                    <div className="flex items-center space-x-2">
+
+                                    </div>
+                                </div>
+                                <PlanPage />
+                            </div>
+                        </div>
+                    </UserProvider>
+                </SidebarProvider>
+            </ProtectedComponent>
+        </main>
+    );
 }

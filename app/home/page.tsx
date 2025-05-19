@@ -17,7 +17,7 @@ import { UserProvider } from "@/components/dataLists/UserContext.tsx";
 
 
 // This is the main page of the app.
-export default function Manage() {
+export default function Home() {
 
   return (
 
@@ -48,8 +48,6 @@ export default function Manage() {
                   </div>
                 </div>
 
-
-                <DataInterfaceContextTest />
 
               </div>
             </div>

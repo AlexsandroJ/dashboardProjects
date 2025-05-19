@@ -23,17 +23,17 @@ import {
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/home",
     icon: Home,
   },
   {
     title: "Gerência",
-    url: "/manege",
+    url: "/manage",
     icon: SquareTerminal  ,
   },
   {
     title: "Bot",
-    url: "#",
+    url: "/bot",
     icon: Bot  ,
   },
   {
@@ -43,7 +43,7 @@ const items = [
   },
   {
     title: "Configurações",
-    url: "#",
+    url: "/config",
     icon: Settings,
   },
 ]

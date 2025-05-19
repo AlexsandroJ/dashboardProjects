@@ -8,12 +8,16 @@ import {
   Profile,
   User,
   UserState,
-  UserContextType
+  UserContextType,
 } from "../../src/interfaces/interfaces"; // Importando os tipos
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
+
+  const api = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_APIBASEURL,
+  });
   const [loading, setLoading] = useState<boolean>(true);
   const [categories, setCategories] = useState<Category[]>([]);
   const [cities, setCities] = useState<City[]>([]);
@@ -21,10 +25,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [qrCode, setQrCode] = useState<string | null>(null);
 
-  const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_APIBASEURL,
-  });
 
   const fetchData = async () => {
 
@@ -42,12 +44,40 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       });
       */
       // Busca dados
-      const user = await api.get(`/api/users/${userIdAux}`, {
-        headers: { Authorization: `Bearer ${TokenAux}` },
-      });
 
-      const userRes = await api.get(`/api/users/${userIdAux}`);
-      const profileRes = await api.get(`/api/profiles/${userIdAux}`);
+      let user;
+      let userRes;
+      let profileRes;
+      let cityRes;
+      let categoryRes;
+
+      await api.get(`/api/users/${userIdAux}`,
+        { // Configurações (headers, etc)
+          headers: {
+            Authorization: `Bearer ${TokenAux}`
+          }
+        }).
+        then(res => {
+          userRes = res;
+        })
+        .catch(err => {
+          console.error('getData: /api/users/ Erro na requisição:', err.response?.data || err.message);
+        });
+
+      await api.get(`/api/profiles/${userIdAux}`,
+        { // Configurações (headers, etc)
+          headers: {
+            Authorization: `Bearer ${TokenAux}`
+          }
+        }).
+        then(res => {
+          profileRes = res;
+        })
+        .catch(err => {
+          console.error('getData: /api/profiles/ Erro na requisição:', err.response?.data || err.message);
+        });
+      //const userRes = await api.get(`/api/users/${userIdAux}`);
+      //const profileRes = await api.get(`/api/profiles/${userIdAux}`);
 
       setUser({
         name: userRes.data.name || null,
@@ -60,16 +90,42 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         age: profileRes.data.age || null,
       });
 
-      const cityRes = await api.get<{ cities: City[] }>(`/api/cities/${userIdAux}`, {
-        headers: { Authorization: `Bearer ${TokenAux}` },
-      });
 
-      const categoryRes = await api.get<{ categories: Category[] }>(
-        `/api/category/${userIdAux}`,
-        {
-          headers: { Authorization: `Bearer ${TokenAux}` },
-        }
-      );
+      await api.get<{ cities: City[] }>(`/api/cities/${userIdAux}`,
+        { // Configurações (headers, etc)
+          headers: {
+            Authorization: `Bearer ${TokenAux}`
+          }
+        }).
+        then(res => {
+          cityRes = res;
+        })
+        .catch(err => {
+          console.error('getData: /api/cities/ Erro na requisição:', err.response?.data || err.message);
+        });
+
+      await api.get<{ categories: Category[] }>(`/api/category/${userIdAux}`,
+        { // Configurações (headers, etc)
+          headers: {
+            Authorization: `Bearer ${TokenAux}`
+          }
+        }).
+        then(res => {
+          categoryRes = res;
+        })
+        .catch(err => {
+          console.error('getData: /api/category/ Erro na requisição:', err.response?.data || err.message);
+        });
+      //const cityRes = await api.get<{ cities: City[] }>(`/api/cities/${userIdAux}`, {
+      //  headers: { Authorization: `Bearer ${TokenAux}` },
+      //});
+
+      //const categoryRes = await api.get<{ categories: Category[] }>(
+      //  `/api/category/${userIdAux}`,
+      //  {
+      //    headers: { Authorization: `Bearer ${TokenAux}` },
+      //  }
+      //);
 
       setCategories(categoryRes.data.categories);
       setCities(cityRes.data.cities);
@@ -95,6 +151,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         profile,
         token,
         loading,
+        qrCode,
         fetchData, // <-- Disponibilizando a função no contexto
       }}
     >

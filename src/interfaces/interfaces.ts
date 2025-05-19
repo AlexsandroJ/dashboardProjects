@@ -46,9 +46,11 @@ export interface UserState {
   user: User | null;
   profile: Profile | null;
   token: string | null;
+  qrCode: string | null;
 }
 
 export interface UserContextType extends UserState {
+  
   loading: boolean;
   fetchData: () => Promise<void>;
 }

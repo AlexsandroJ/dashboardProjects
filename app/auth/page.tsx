@@ -6,7 +6,7 @@ import { LoginForm } from "@/components/login-form"
 import { RegisterForm } from "@/components/register-forms"
 import { Button } from "@/components/ui/button"
 
-export default function LoginPage() {
+export default function Auth() {
   const [isLogin, setIsLogin] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
 

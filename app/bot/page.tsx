@@ -9,7 +9,7 @@ import { ModeToggle } from "@/components/toggle_between_light_dark"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 
-import DataInterfaceContextTest from '@/components/dataLists/DataInterfaceContextTest';
+import BotPage from '@/components/bot/Bot';
 
 
 import ProtectedComponent from "@/components/ProtectedComponent";
@@ -17,7 +17,7 @@ import { UserProvider } from "@/components/dataLists/UserContext.tsx";
 
 
 // This is the main page of the app.
-export default function Manage() {
+export default function Bot() {
 
   return (
 
@@ -48,9 +48,7 @@ export default function Manage() {
                   </div>
                 </div>
 
-
-                <DataInterfaceContextTest />
-
+                <BotPage/>
               </div>
             </div>
           </UserProvider>
