@@ -22,7 +22,7 @@ export default function Home() {
     useEffect(() => {
         // ✅ Garante que só conecta uma vez
         if (!socketRef.current) {
-            socketRef.current = io("http://localhost:3001", {
+            socketRef.current = io(process.env.NEXT_PUBLIC_APIBASEURL, {
                 reconnection: true,
                 reconnectionAttempts: Infinity,
                 randomizationFactor: 0.5,
