@@ -40,7 +40,7 @@ export async function Transactions() {
           <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
             2023-06-23
           </TableCell>
-          <TableCell className="text-right">$250.00</TableCell>
+          <TableCell className="text-right">R$250.00</TableCell>
         </TableRow>
         <TableRow>
           <TableCell>
@@ -58,7 +58,7 @@ export async function Transactions() {
           <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
             2023-06-24
           </TableCell>
-          <TableCell className="text-right">$150.00</TableCell>
+          <TableCell className="text-right">R$150.00</TableCell>
         </TableRow>
         <TableRow>
           <TableCell>
@@ -76,7 +76,7 @@ export async function Transactions() {
           <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
             2023-06-25
           </TableCell>
-          <TableCell className="text-right">$350.00</TableCell>
+          <TableCell className="text-right">R$350.00</TableCell>
         </TableRow>
         <TableRow>
           <TableCell>
@@ -94,7 +94,7 @@ export async function Transactions() {
           <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
             2023-06-26
           </TableCell>
-          <TableCell className="text-right">$450.00</TableCell>
+          <TableCell className="text-right">R$450.00</TableCell>
         </TableRow>
       </TableBody>
     </Table>

@@ -3,6 +3,7 @@ import Head from 'next/head';
 import PlanCard from './PlanCard';
 
 export default function Plan() {
+  
   const plans = [
     {
       title: 'Plano Básico',
@@ -15,6 +16,7 @@ export default function Plan() {
       ],
       buttonLabel: 'Escolher Plano',
       className: 'bg-green-500 text-white',
+      link:'/auth'
     },
     {
       title: 'Plano Corporativo',
@@ -27,6 +29,7 @@ export default function Plan() {
       ],
       buttonLabel: 'Escolher Plano',
       className: 'bg-orange-500 text-white',
+      link:'/auth'
     },
     {
       title: 'Plano IA Premium',
@@ -39,6 +42,7 @@ export default function Plan() {
       ],
       buttonLabel: 'Escolher Plano',
       className: 'bg-yellow-500 text-white',
+      link:'/auth'
     },
     {
       title: 'Plano Médio',
@@ -51,6 +55,7 @@ export default function Plan() {
       ],
       buttonLabel: 'Escolher Plano',
       className: 'bg-purple-500 text-white',
+      link:'/auth'
     },
   ];
 
@@ -81,6 +86,7 @@ export default function Plan() {
               features={plan.features}
               buttonLabel={plan.buttonLabel}
               className={plan.className}
+              link={plan.link}
             />
           ))}
         </div>

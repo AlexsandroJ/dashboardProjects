@@ -45,10 +45,12 @@ export default function SwapLayout({
 
   return (
     <>
+    {/* 
       <EditSwitch
         defaultEditing={defaultEditing}
         onCheckedChange={setIsEditing}
       />
+      */}
       <Container id="swap-layout" enable={isEditing} onSwap={onSwap} {...rest}>
         {Object.entries(slotItems).map(([slotId, sectionKey]) => {
           const section = sections[sectionKey];

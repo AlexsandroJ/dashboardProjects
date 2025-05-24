@@ -34,9 +34,8 @@ import { OverviewLoader } from "@/components/overview-loader";
 import { RecentSalesLoader } from "@/components/recent-sales-loader";
 import { TransactionsLoader } from "@/components/transactions-loader";
 
-import DataInterface from '@/components/dataLists/DataInterfaceANTIGO';
+import PlanPage from '@/components/plan/PlanPage';
 
-import ProtectedLayout from "@/components/ProtectedRoute";
 
 // swap layout is a client side component, since it uses local storage for this demo.
 // In production you might want to save the layout order on server via api call
@@ -50,44 +49,52 @@ export default function Home() {
   return (
 
     <main className="flex min-h-screen flex-col items-center justify-between p-y-4">
-      <ProtectedLayout>
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarTrigger />
-          <div className="flex-col flex max-w-7xl w-full mx-auto">
-            <div className="border-b">
-              <div className="flex h-16 items-center px-4">
-                {/*<TeamSwitcher />*/}
-                <MainNav className="mx-6" />
-                <div className="ml-auto flex items-center space-x-4">
-                  <ModeToggle />
-                  {/*<Search />*/}
-                  <UserNav />
-                </div>
-              </div>
-            </div>
-            <div className="flex-1 space-y-4 p-8 pt-6">
-              <div className="flex items-center justify-between space-y-2 flex-wrap">
-                <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-                <div className="flex items-center space-x-2">
-                  {/*<CalendarDateRangePicker />
-              <Button data-cy="meu-botao" >Download</Button>*/}
-                </div>
-              </div>
 
-              <DataInterface />
-              {/*
+      <div className="flex-col flex max-w-7xl w-full mx-auto">
+
+        <div className="border-b">
+
+          <div className="flex h-16 items-center px-4">
+
+            {/*<TeamSwitcher />*/}
+            <h1>Buscando facilidade e altomação em seus atendimentos?</h1>
+            <div className="ml-auto flex items-center space-x-4">
+
+              <ModeToggle />
+              {/*<Search />*/}
+
+            </div>
+          </div>
+        </div>
+        <div className="flex-1 space-y-4 p-8 pt-6">
+          <div className="flex items-center justify-between space-y-2 flex-wrap">
+
+            <div>
+              <PlanPage />
+            </div>
+            {/*<div className="flex items-center space-x-2">
+                <CalendarDateRangePicker />
+              <Button data-cy="meu-botao" >Download</Button>
+              </div>
+              */}
+            <div className="flex-coll items-center justify-between gap-8">
+              <h1 className="text-3xl font-bold text-center mb-4">
+                Nossa plataforma oferece:
+              </h1>
+            </div>
+          </div>
+          {
             <SwapLayout
               defaultEditing={false}
               sections={initialSwapSections}
               sectionSlotClassNames={sectionSlotClassNames}
               className="w-full grid grid-cols-2 grid-rows-5 gap-8"
             />
-            */}
-            </div>
-          </div>
-        </SidebarProvider>
-      </ProtectedLayout>
+          }
+        </div>
+      </div>
+
+
     </main>
   );
 }
@@ -97,19 +104,7 @@ const initialSwapSections = {
   top: (
     <Card className="flex-grow h-full">
       <CardHeader>
-        <CardTitle>Stats</CardTitle>
-      </CardHeader>
-      <CardContent className="pl-2">
-        <Suspense key={"stats"} fallback={<StatsLoader />}>
-          <Stats />
-        </Suspense>
-      </CardContent>
-    </Card>
-  ),
-  center_left: (
-    <Card className="flex-grow h-full">
-      <CardHeader>
-        <CardTitle>Overview</CardTitle>
+        <CardTitle>Relatório de Vendas</CardTitle>
       </CardHeader>
       <CardContent className="pl-2">
         <Suspense key={"overview"} fallback={<OverviewLoader />}>
@@ -118,11 +113,23 @@ const initialSwapSections = {
       </CardContent>
     </Card>
   ),
+  center_left: (
+    <Card className="flex-grow h-full">
+      <CardHeader>
+        <CardTitle>Estatisticas</CardTitle>
+      </CardHeader>
+      <CardContent className="pl-2">
+        <Suspense key={"stats"} fallback={<StatsLoader />}>
+          <Stats />
+        </Suspense>
+      </CardContent>
+    </Card>
+  ),
   center_right: (
     <Card className="flex-grow h-full">
       <CardHeader>
-        <CardTitle>Recent Sales</CardTitle>
-        <CardDescription>You made 265 sales this month.</CardDescription>
+        <CardTitle>Vendas Recentes</CardTitle>
+        <CardDescription> 265 vendas Este més.</CardDescription>
       </CardHeader>
       <CardContent>
         <Suspense key={"recent-sales"} fallback={<RecentSalesLoader />}>
@@ -135,9 +142,9 @@ const initialSwapSections = {
     <Card className="flex-grow h-full">
       <CardHeader className="flex flex-row items-center">
         <div className="grid gap-2">
-          <CardTitle>Transactions</CardTitle>
+          <CardTitle>Confirmações</CardTitle>
           <CardDescription>
-            Recent transactions from your store.
+            Tranzações.
           </CardDescription>
         </div>
       </CardHeader>

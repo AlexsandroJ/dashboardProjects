@@ -1,7 +1,11 @@
 // components/PlanCard.js
+"use client"
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
-const PlanCard = ({ title, price, features, buttonLabel, className }) => {
+const PlanCard = ({ title, price, features, buttonLabel, className, link }) => {
+  const router = useRouter();
+
   return (
     <div
       className={`shadow-lg rounded-lg p-6 flex flex-col justify-between min-w-[280px] max-w-full h-[450px] ${className}`}
@@ -36,7 +40,9 @@ const PlanCard = ({ title, price, features, buttonLabel, className }) => {
       </div>
 
       {/* Botão de Ação */}
-      <button className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded font-bold w-full mt-4">
+      <button className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded font-bold w-full mt-4"
+        onClick={() => router.push(link)}
+      >
         {buttonLabel}
       </button>
     </div>
