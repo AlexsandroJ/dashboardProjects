@@ -13,7 +13,8 @@ export default function Home() {
     const [imagemSrc, setImagemSrc] = useState(null);
     const [conectado, setConectado] = useState(false);
     const [token, setToken] = useState<string | null>(null);
-    const [botState, setBotState] = useState(false);
+    const [botActiveState, setBotActiveState] = useState(false);
+    const [botAIState, setBotAIState] = useState(false);
     const [clientState, setClientState] = useState(false);
     const [serverState, serServerState] = useState(false);
 
@@ -46,7 +47,7 @@ export default function Home() {
         });
 
         socket.on("atualizacao", (data) => {
-            console.log("📥 Dados recebidos:", data);
+            console.log("📥 Dados:", data);
             setDados(data);
 
             if (data.type === "conected") {
@@ -56,7 +57,8 @@ export default function Home() {
                 serServerState(data.serverState);
                 setClientState(data.clientState);
                 setConectado(data.conectado);
-                setBotState(data.botState);
+                setBotActiveState(data.botActiveState);
+                setBotAIState(data.botAIState);
 
             }
         });
@@ -70,13 +72,31 @@ export default function Home() {
         };
     }, []);
 
-    const toggleConexao = () => {
-        const novoEstado = !botState;
-        setBotState(novoEstado);
+    const toggleBotsActivit = () => {
+        const novoEstado = !botActiveState;
 
         const mensagem = {
-            type: "setBotState",
-            botState: novoEstado,
+            type: "setbotState",
+            botActiveState: novoEstado,
+            botAIState: botAIState,
+            token: localStorage.getItem("token"),
+            userId: localStorage.getItem("userId")
+        };
+
+        if (socketRef.current?.connected) {
+            socketRef.current.emit("atualizacao", mensagem);
+        } else {
+            console.warn("❌ Socket não está conectado");
+        }
+    };
+
+    const toggleBotsTipes = () => {
+        const novoEstado = !botAIState;
+
+        const mensagem = {
+            type: "setbotState",
+            botActiveState: botActiveState,
+            botAIState: novoEstado,
             token: localStorage.getItem("token"),
             userId: localStorage.getItem("userId")
         };
@@ -110,9 +130,9 @@ export default function Home() {
             {serverState ? (
                 <div className="flex flex-col items-center gap-4">
                     <p>✅​ Whatsapp Server Conectado</p>
-                    <div className="flex flex-rol items-center border rounded-lg  p-6 gap-6">
+                    <div className="flex flex-row items-center border rounded-lg  p-6 gap-6">
                         <div className="flex flex-col items-center border rounded-lg  p-6 ">
-                            <div className="flex flex-roll items-center bord gap-6">
+                            <div className="flex flex-row items-center bord gap-6">
 
                                 <span
                                     style={{
@@ -142,41 +162,79 @@ export default function Home() {
                             </div>
                         </div>
                         <div className="flex flex-col items-center border rounded-lg  p-6 ">
-                        <p className="text-xs leading-none text-muted-foreground p-1">
-                                    CONEXÃO
-                                </p>
-                        <span
-                            style={{
-                                color: clientState ? '#4CAF50' : '#f44336',
-                            }}
-                        >
-                            {clientState ? '🟢 ON' : '🔴 OFF'}
+                            <p className="text-xs leading-none text-muted-foreground p-1">
+                                CONEXÃO
+                            </p>
+                            <span
+                                style={{
+                                    color: clientState ? '#4CAF50' : '#f44336',
+                                }}
+                            >
+                                {clientState ? '🟢 ON' : '🔴 OFF'}
 
-                        </span>
+                            </span>
                         </div>
                     </div>
                     {clientState ? (
 
                         <div>
                             {conectado ? (
-                                <div className="flex flex-col items-center gap-4">
-                                    <div className="flex flex-roll items-center gap-2">
+                                <div className="flex flex-col items-center">
+                                    <div className="flex flex-row items-center p-6">
                                         <MessageCircle />
                                         <h2>CONECTADO</h2>
                                     </div>
-                                    <div className="flex flex-roll items-center gap-2">
-                                        <h1>Bot</h1>
-                                        <h2
-                                            style={{
-                                                color: botState ? '#4CAF50' : '#f44336',
-                                            }}
-                                        >{botState ? 'ON' : 'OFF'}</h2>
+
+                                    <div className="flex flex-row border rounded-lg p-6 gap-6">
+                                        <div className="flex flex-col justify-center items-center border rounded-lg p-2 size-40 gap-2">
+                                            <span
+                                                style={{
+                                                    color: botActiveState ? '#4CAF50' : '#f44336',
+                                                }}
+                                            >
+                                                {botAIState ? 'Modo Bot IA' : 'Modo Bot Menu'}
+                                            </span>
+                                            <div className="flex flex-row gap-6">
+                                                <Switch
+                                                    checked={botAIState}
+                                                    onCheckedChange={toggleBotsTipes}
+                                                />
+                                                <HelpTooltip
+                                                    title="Controle do tipo de bot"
+                                                    description="Para clientes premiun existe a opção de bot com IA."
+                                                    example={`Modo Bot Menu: Sistema Simples\nModo Bot IA: Uso de IA`}
+                                                />
+                                            </div>
+
+                                            <span
+                                                style={{
+                                                    color: botActiveState ? 'yellow' : '#f44336',
+                                                }}
+                                            >
+                                                {botAIState ? 'Modo Premiun' : ''}
+                                            </span>
+                                        </div>
+                                        <div className="flex flex-col justify-center items-center border rounded-lg p-2 size-40 gap-2">
+                                            <span
+                                                style={{
+                                                    color: botActiveState ? '#4CAF50' : '#f44336',
+                                                }}
+                                            >
+                                                {botActiveState ? 'Bot ON' : 'Bot OFF'}
+                                            </span>
+                                            <div className="flex flex-row gap-6">
+                                                <Switch
+                                                    checked={botActiveState}
+                                                    onCheckedChange={toggleBotsActivit}
+                                                />
+                                                <HelpTooltip
+                                                    title="Controle ativação do bot"
+                                                    description="Ligue ou desligue o bot quando for nescessario."
+                                                    example={`ON\nOFF`}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <Button
-                                        onClick={toggleConexao}
-                                    >
-                                        {botState ? 'Desligar Bot' : 'Ligar Bot'}
-                                    </Button>
                                 </div>
                             ) : (
                                 <div className="space-x-4 p-6">
