@@ -1,4 +1,4 @@
-// hooks/useFetchData.js
+// hooks/useFetchData.tsx
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -6,29 +6,35 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_APIBASEURL,
 });
 
-export const useFetchData = (email, password) => {
+export const useFetchData = (email: string | null, password: string | null) => {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
   const [data, setData] = useState({
-    categories: [],
-    cities: [],
-    name: null,
-    phone: [],
-    bio: null,
-    avatarUrl: null,
-    location: null,
-    age: null,
-    userId: null,
-    token: null,
+    categories: [] as any[],
+    cities: [] as any[],
+    name: null as string | null,
+    phone: [] as string[],
+    bio: null as string | null,
+    avatarUrl: null as string | null,
+    location: null as string | null,
+    age: null as number | null,
+    userId: null as string | null,
+    token: null as string | null,
   });
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!email || !password) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        const sessionRes = await api.post(`/api/sessions/login`, {
+        const sessionRes = await api.post("/api/sessions/login", {
           email,
           password,
         });
+
         const token = sessionRes.data.token;
         const userId = sessionRes.data.userId;
 
@@ -58,7 +64,7 @@ export const useFetchData = (email, password) => {
 
         localStorage.setItem("token", token);
         setLoading(false);
-      } catch (err) {
+      } catch (err: any) {
         setError(err);
         setLoading(false);
         console.error("Erro ao buscar dados:", err.message);

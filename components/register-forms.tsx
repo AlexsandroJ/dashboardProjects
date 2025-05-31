@@ -15,12 +15,12 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
   const [bio, setBio] = useState(""); // Novo campo: Bio
   const [avatarUrl, setAvatarUrl] = useState(""); // Novo campo: Avatar URL
   const [location, setLocation] = useState(""); // Novo campo: Localização
-  const [age, setAge] = useState(""); // Novo campo: Idade
+  const [age, setAge] = useState<number | null>(null); // Novo campo: Idade
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   // Função para lidar com o envio do formulário
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Validar se as senhas coincidem
@@ -52,7 +52,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
       const data = await response.json();
 
       const userId = data.userId;
-      
+
       const respon = await fetch(`${process.env.NEXT_PUBLIC_APIBASEURL}/api/profiles`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -71,14 +71,18 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
         throw new Error(errorData.message || "Register-forms: Erro ao registrar perfil");
       }
 
-      
+
       console.log("Usuário registrado com sucesso:", data);
 
       // Redirecionar ou exibir mensagem de sucesso
       alert("Cadastro realizado com sucesso! Verifique seu email para confirmar.");
       window.location.href = "/auth"; // Redireciona para a página de login
-    } catch (err) {
-      setError(err.message || "Register-forms: Erro ao processar o cadastro.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Erro ao processar o cadastro.");
+      } else {
+        setError("Erro ao processar o cadastro.");
+      }
     } finally {
       setLoading(false);
     }
@@ -165,8 +169,8 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
             id="age"
             type="text"
             placeholder="25"
-            value={age}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAge(e.target.value)}
+            value={age?.toString() || "0"}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAge(parseInt(e.target.value) || 0)}
           />
         </div>
 

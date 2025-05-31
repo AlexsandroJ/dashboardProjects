@@ -54,7 +54,7 @@ const CategoryList = () => {
           />
         </h2>
           
-          {cities.map((city, index) => (
+          {cities.map((city: City, index) => (
             <div key={index}>
               <CityItem
                 key={index}

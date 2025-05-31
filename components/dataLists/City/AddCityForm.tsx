@@ -7,7 +7,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 interface AddCityFormProps {
   fetchData: () => void;
-  userId: string;
+  userId: string | null;
 }
 const AddCityForm = ({ fetchData, userId }: AddCityFormProps) => {
   const api = axios.create({
