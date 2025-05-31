@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
 
-export function LoginForm({ className, ...props }) {
+export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form">) {
   const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_APIBASEURL,
   });
