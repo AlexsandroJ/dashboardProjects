@@ -1,4 +1,5 @@
 "use client";
+import { ChangeEvent } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +16,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
   const [avatarUrl, setAvatarUrl] = useState(""); // Novo campo: Avatar URL
   const [location, setLocation] = useState(""); // Novo campo: Localização
   const [age, setAge] = useState(""); // Novo campo: Idade
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   // Função para lidar com o envio do formulário
@@ -103,7 +104,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
             type="text"
             placeholder="Jonas"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
             required
           />
         </div>
@@ -116,7 +117,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
             type="email"
             placeholder="m@example.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             required
           />
         </div>
@@ -129,7 +130,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
             type="text"
             placeholder="Fale um pouco sobre você..."
             value={bio}
-            onChange={(e) => setBio(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBio(e.target.value)}
           />
         </div>
 
@@ -141,7 +142,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
             type="url"
             placeholder="https://example.com/avatar.jpg"
             value={avatarUrl}
-            onChange={(e) => setAvatarUrl(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAvatarUrl(e.target.value)}
           />
         </div>
 
@@ -153,7 +154,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
             type="text"
             placeholder="São Paulo, Brasil"
             value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLocation(e.target.value)}
           />
         </div>
 
@@ -165,7 +166,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
             type="text"
             placeholder="25"
             value={age}
-            onChange={(e) => setAge(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAge(e.target.value)}
           />
         </div>
 
@@ -176,7 +177,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
             id="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             required
           />
         </div>
@@ -188,7 +189,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
             id="password-check"
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
             required
           />
         </div>

@@ -3,14 +3,14 @@ import { useEffect, useState, useRef } from 'react';
 import { Switch } from "@/components/ui/switch"
 import HelpTooltip from "../HelpTooltip"; // ajuste o caminho se necessário
 
-import io from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import {
     MessageCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button";
 export default function Home() {
-    const [dados, setDados] = useState(null);
-    const [imagemSrc, setImagemSrc] = useState(null);
+    const [dados, setDados] = useState<string | null>(null);
+    const [imagemSrc, setImagemSrc] = useState<string | null>(null);;
     const [conectado, setConectado] = useState(false);
     const [token, setToken] = useState<string | null>(null);
     const [botActiveState, setBotActiveState] = useState(false);
@@ -18,7 +18,7 @@ export default function Home() {
     const [clientState, setClientState] = useState(false);
     const [serverState, serServerState] = useState(false);
 
-    const socketRef = useRef(null); // ✅ Usa useRef para manter uma única instância
+    const socketRef = useRef<Socket | null>(null); // ✅ Usa useRef para manter uma única instância
 
     useEffect(() => {
         // ✅ Garante que só conecta uma vez
