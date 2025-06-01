@@ -17,7 +17,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3001/api/sessions/login", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APIBASEURL}/api/sessions/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
