@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
-
+const nextConfig = {
+    //experimental: {
+      
+      allowedDevOrigins: ['*'] // Permite todas as origens
+    //},
+  };
 export default nextConfig;
