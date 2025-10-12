@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState, useRef } from 'react';
 import { Switch } from "@/components/ui/switch"
-import HelpTooltip from "../HelpTooltip"; // ajuste o caminho se necessário
+import HelpTooltip from "../HelpTooltip.jsx"; // ajuste o caminho se necessário
 import axios from 'axios';
 import { io, Socket } from 'socket.io-client';
 import {
@@ -10,119 +10,102 @@ import {
 import { Button } from "@/components/ui/button";
 
 
-import { useUserContext } from "../dataLists/UserContext.tsx";
-import { use } from 'chai';
+import { useUserContext } from "../dataLists/UserContext.tsx.jsx";
 
-import {
-    Category,
-    City,
-    Profile,
-    User,
-    UserContextType,
-} from "../../src/interfaces/interfaces";
+
+const deploymentData = {
+    apiVersion: "apps/v1",
+    kind: "Deployment",
+    metadata: {
+        name: "whatsap"
+    },
+    spec: {
+        replicas: 1,
+        selector: {
+            matchLabels: {
+                app: "whatsap"
+            }
+        },
+        template: {
+            metadata: {
+                labels: {
+                    app: "whatsap"
+                }
+            },
+            spec: {
+                containers: [
+                    {
+                        name: "whatsap",
+                        image: "alexsandrojsilva0/whatsap:82c4c16",
+                        ports: [
+                            {
+                                containerPort: 5001
+                            }
+                        ],
+                        env: [
+                            {
+                                name: "NODE_ENV",
+                                value: "production"
+                            },
+                            {
+                                name: "API_URL",
+                                value: "http://api:3001"
+                            },
+                            {
+                                name: "DEV",
+                                value: "false"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+};
+
+const serviceData = {
+    apiVersion: "v1",
+    kind: "Service",
+    metadata: {
+        name: "whatsap"
+    },
+    spec: {
+        type: "LoadBalancer",
+        selector: {
+            app: "whatsap"
+        },
+        ports: [
+            {
+                protocol: "TCP",
+                port: 5001,
+                targetPort: 5001
+            }
+        ]
+    }
+};
+
 
 
 export default function Home() {
 
+
+
     const [dados, setDados] = useState<string | null>(null);
     const [imagemSrc, setImagemSrc] = useState<string | null>(null);;
     const [conectado, setConectado] = useState(false);
+    const [token, setToken] = useState<string | null>(null);
     const [botActiveState, setBotActiveState] = useState(false);
     const [botAIState, setBotAIState] = useState(false);
     const [clientState, setClientState] = useState(false);
-    const [serverState, setServerState] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [serverState, serServerState] = useState(false);
 
     const socketRef = useRef<Socket | null>(null); // ✅ Usa useRef para manter uma única instância
 
 
-    const { userId, token, fetchData } = useUserContext() as {
+    const { userId, fetchData } = useUserContext() as {
         userId: string | null;
-        token: string | null;
         fetchData: () => void;
     };
-
-
-    const deploymentData = {
-        apiVersion: "apps/v1",
-        kind: "Deployment",
-        metadata: {
-            name: `whatsap-${userId}`
-        },
-        spec: {
-            replicas: 1,
-            selector: {
-                matchLabels: {
-                    app: `whatsap-${userId}`
-                }
-            },
-            template: {
-                metadata: {
-                    labels: {
-                        app: `whatsap-${userId}`
-                    }
-                },
-                spec: {
-                    containers: [
-                        {
-                            name: `whatsap-${userId}`,
-                            image: "alexsandrojsilva0/whatsap:latest",
-                            ports: [
-                                {
-                                    containerPort: 5001
-                                }
-                            ],
-                            env: [
-                                {
-                                    name: "TOKEN",
-                                    value: token
-                                },
-                                {
-                                    name: "USERID",
-                                    value: userId
-                                },
-                                {
-                                    name: "NODE_ENV",
-                                    value: "production"
-                                },
-                                {
-                                    name: "API_URL",
-                                    value: process.env.NEXT_PUBLIC_APIBASEURL
-                                },
-                                {
-                                    name: "DEV",
-                                    value: "false"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        }
-    };
-
-
-    const serviceData = {
-        apiVersion: "v1",
-        kind: "Service",
-        metadata: {
-            name: `whatsap-${userId}`
-        },
-        spec: {
-            type: "LoadBalancer",
-            selector: {
-                app: `whatsap-${userId}`
-            },
-            ports: [
-                {
-                    protocol: "TCP",
-                    port: 5001,
-                    targetPort: 5001
-                }
-            ]
-        }
-    };
-
 
     useEffect(() => {
         // ✅ Garante que só conecta uma vez
@@ -139,42 +122,30 @@ export default function Home() {
 
         socket.on("connect", () => {
             console.log("🔌 Conectado ao servidor");
+
+
             // Solicita estados iniciais
-            socket.emit("atualizacao", { type: "getStates", token: token, userId: userId });
+            socket.emit("atualizacao", { type: "getStates" });
         });
 
         socket.on("disconnect", () => {
             console.log("🔴 Servidor desconectado");
-            setServerState(false);
+            serServerState(false);
         });
 
         socket.on("atualizacao", (data) => {
+            console.log("📥 Dados:", data);
+            setDados(data);
 
-            if (data.userId === userId) {
-
-                fetchData(); // Atualiza os dados do usuário
-
-                console.log("📥 Dados:", data);
-
-                setDados(data);
-
+            if (data.type === "conected") {
                 if (!data.conectado && data.imageData) {
                     setImagemSrc(`data:image/png;base64,${data.imageData}`);
                 }
-                setServerState(data.serverState);
+                serServerState(data.serverState);
                 setClientState(data.clientState);
                 setConectado(data.conectado);
                 setBotActiveState(data.botActiveState);
                 setBotAIState(data.botAIState);
-
-
-            }
-
-            if (data.name.includes(userId) && data.reason === "SuccessfulCreate") {
-
-                fetchData(); // Atualiza os dados do usuário
-                console.log("Container Criado", data.reason);
-
 
             }
         });
@@ -195,8 +166,8 @@ export default function Home() {
             type: "setbotState",
             botActiveState: novoEstado,
             botAIState: botAIState,
-            token: token,
-            userId: userId
+            token: localStorage.getItem("token"),
+            userId: localStorage.getItem("userId")
         };
 
         if (socketRef.current?.connected) {
@@ -213,8 +184,8 @@ export default function Home() {
             type: "setbotState",
             botActiveState: botActiveState,
             botAIState: novoEstado,
-            //token: localStorage.getItem("token"),
-            //userId: localStorage.getItem("userId")
+            token: localStorage.getItem("token"),
+            userId: localStorage.getItem("userId")
         };
 
         if (socketRef.current?.connected) {
@@ -227,16 +198,10 @@ export default function Home() {
     const toggleSystem = () => {
         const novoEstado = !clientState;
 
+
         const mensagem = {
             type: "system",
-            token: token,
-            userId: userId,
-            serverState: serverState,
-            clientState: novoEstado,
-            conectado: conectado,
-            botActiveState: botActiveState,
-            botAIState: botAIState,
-            imageData: imagemSrc
+            comand: novoEstado
         };
 
         if (socketRef.current?.connected) {
@@ -247,12 +212,12 @@ export default function Home() {
     };
 
     // Função para criar deployment
-    const createDeployment = async () => {
+    const createDeployment = async (deploymentData, userId) => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_APIBASEURL}/api/creat-deployments/${userId}`, {
-                deployment: deploymentData
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_APIBASEURL}/api/creat-deployments`, {
+                deployment: deploymentData,
+                userId: userId
             });
-            //alert('Deployment criado com sucesso!');
             return response.data;
         } catch (error) {
             console.error('Erro ao criar deployment:', error.response ? error.response.data : error.message);
@@ -261,12 +226,9 @@ export default function Home() {
     };
 
     // Função para expor serviço
-    const exposeService = async () => {
+    const exposeService = async (serviceData) => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_APIBASEURL}/api/expose-services/${userId}`, {
-                service: serviceData
-            });
-            //alert('Serviço criado com sucesso!');
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_APIBASEURL}/api/expose-services`, serviceData);
             return response.data;
         } catch (error) {
             console.error('Erro ao expor serviço:', error.response ? error.response.data : error.message);
@@ -274,84 +236,27 @@ export default function Home() {
         }
     };
     const iniciar = async () => {
-        // Cria o deployment
-        await createDeployment();
-        // Expõe o serviço
-        await exposeService();
-        fetchData();
-        setLoading(true);
-    }
-
-    const fechar = async () => {
         try {
-            await deletarServico();
-            await deletarDeployment();
-            setServerState(false);
-            fetchData();
-            setLoading(false);
+            // Cria o deployment
+            await createDeployment(deploymentData, userId);
+
+            // Expõe o serviço
+            await exposeService(serviceData);
+
+            alert('Deployment e serviço criados com sucesso!');
         } catch (error) {
-            console.error('Erro ao criar deployment e serviço:', error.response ? error.response.data : error.message);
+            console.error('Erro ao criar deployment:', error.response ? error.response.data : error.message);
         }
     }
 
-    const listDeployments = async () => {
-        try {
-            console.log(userId);
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_APIBASEURL}/api/list-deployments`);
-
-            console.log(response.data);
-        } catch (error) {
-            console.error('Erro ao listar deployments:', error.response ? error.response.data : error.message);
-            throw error;
-        }
-    };
-    const listServices = async () => {
-        try {
-            console.log(userId);
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_APIBASEURL}/api/list-services`);
-
-            console.log(response.data);
-        } catch (error) {
-            console.error('Erro ao listar serviços:', error.response ? error.response.data : error.message);
-            throw error;
-        }
-    };
-    const deletarDeployment = async () => {
-        try {
-            const response = await axios.delete(
-                `${process.env.NEXT_PUBLIC_APIBASEURL}/api/del-deployments/${userId}`);
-            //alert('Deployment deletado com sucesso!');
-            console.log(response.data);
-        } catch (error) {
-            console.error('Erro ao deletar deployments:', error.response ? error.response.data : error.message);
-            throw error;
-        }
-    };
-    const deletarServico = async () => {
-        try {
-            const response = await axios.delete(
-                `${process.env.NEXT_PUBLIC_APIBASEURL}/api/del-services/${userId}`);
-            //alert('Serviço deletado com sucesso!');
-            console.log(response.data);
-        } catch (error) {
-            console.error('Erro ao deletar serviços:', error.response ? error.response.data : error.message);
-            throw error;
-        }
-    };
     return (
         <div className="space-x-4 p-6 ">
-            <div className="flex flex-col items-center gap-4">
-
-            </div>
+            <Button
+                onClick={iniciar}
+            >Criar Deployment e servics</Button>
             {serverState ? (
                 <div className="flex flex-col items-center gap-4">
-
                     <p>✅​ Whatsapp Server Conectado</p>
-                    <Button
-                        onClick={fechar}
-                    >Fechar</Button>
                     <div className="flex flex-row items-center border rounded-lg  p-6 gap-6">
                         <div className="flex flex-col items-center border rounded-lg  p-6 ">
                             <div className="flex flex-row items-center bord gap-6">
@@ -487,11 +392,7 @@ export default function Home() {
                         </div>
                     ) : (
                         <div className="flex flex-col items-center space-x-4 p-6">
-<<<<<<< HEAD
-                            <p>⏳ Aguarde Liberação do QRCode </p>
-=======
-                            <p>⏳ Aguarde Liberação do QRCode</p>
->>>>>>> 6001676 (..)
+                            <p>⏳ Aguardando inicio do sistema</p>
                         </div>
 
                     )}
@@ -500,19 +401,8 @@ export default function Home() {
                 </div>
 
             ) : (
-
-                <div className="flex flex-col items-center gap-4 ">
-                    <Button
-                        onClick={iniciar}
-                    >Iniciar Sistema</Button>
-                    <span
-                                    style={{
-                                        color: loading ? '#f44336' : '#4CAF50',
-                                    }}
-                                >
-                                    {loading ? '🔴 Sistema Iniciando...' : '🔴 Sistema Desconectado'}
-
-                                </span>
+                <div className="flex flex-col items-center space-x-4 p-6">
+                    <p>⏳ Aguardando Conexão com o servidor...</p>
                 </div>
             )}
         </div>

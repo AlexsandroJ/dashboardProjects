@@ -49,6 +49,22 @@ export interface UserState {
   qrCode: string | null;
 }
 
+export interface Tenant {
+  userId: string;
+  deploymentName: string | null;
+  servicesName: string | null;
+  namespace: string;
+  image: string | null;
+  replicas: number;
+  env: Record<string, string> | null;
+  nodePort: string | null;
+  status: 'starting' | 'active' | 'paused' | 'deleted' | 'error';
+  createdBy: string | null;
+  metadata: Record<string, unknown> | null;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+}
+
 export interface UserContextType extends UserState {
   
   loading: boolean;

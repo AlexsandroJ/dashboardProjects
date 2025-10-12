@@ -58,8 +58,8 @@ export const useFetchData = (email: string | null, password: string | null) => {
           avatarUrl: profileRes.data.avatarUrl || null,
           location: profileRes.data.location || null,
           age: profileRes.data.age || null,
-          userId,
-          token,
+          userId: userId,
+          token: token,
         });
 
         localStorage.setItem("token", token);
@@ -67,7 +67,7 @@ export const useFetchData = (email: string | null, password: string | null) => {
       } catch (err: any) {
         setError(err);
         setLoading(false);
-        console.error("Erro ao buscar dados:", err.message);
+        console.error("useFetchData: Erro ao buscar dados:", err.message);
       }
     };
 

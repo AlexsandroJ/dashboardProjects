@@ -9,6 +9,7 @@ import {
   City,
   Profile,
   User,
+  Tenant,
   UserContextType,
 } from "../../src/interfaces/interfaces";
 
@@ -24,6 +25,7 @@ interface ProfileDataResponse {
   location: string | null;
   age: number | null;
 }
+
 
 // Criação do contexto
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -41,6 +43,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [qrCode, setQrCode] = useState<string | null>(null);
+  const [tenant, setTenant] = useState<Tenant | null>(null);
 
   const fetchData = async () => {
     const TokenAux = localStorage.getItem("token");
@@ -69,6 +72,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         api.get<{ categories: Category[] }>(`/api/category/${userIdAux}`, {
           headers: { Authorization: `Bearer ${TokenAux}` },
         }),
+        
       ]);
 
       // Atualiza estados
@@ -87,8 +91,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       setCities(cityRes.data.cities || []);
       setCategories(categoryRes.data.categories || []);
 
+      //setTenant(tenantRes.data.tenant || []);
+
     } catch (err) {
-      console.error("Erro ao buscar dados:", err);
+      console.error("UserProvider: Erro ao buscar dados:", err);
     } finally {
       setLoading(false);
     }
