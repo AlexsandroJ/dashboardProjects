@@ -21,6 +21,8 @@ import {
     UserContextType,
 } from "../../src/interfaces/interfaces";
 
+import { DeploymentData, ServiceData } from '../../src/interfaces/interfaces';
+
 
 export default function Home() {
 
@@ -43,7 +45,7 @@ export default function Home() {
     };
 
 
-    const deploymentData = {
+    const deploymentData: DeploymentData = {
         apiVersion: "apps/v1",
         kind: "Deployment",
         metadata: {
@@ -102,7 +104,7 @@ export default function Home() {
     };
 
 
-    const serviceData = {
+    const serviceData: ServiceData = {
         apiVersion: "v1",
         kind: "Service",
         metadata: {
@@ -255,7 +257,16 @@ export default function Home() {
             //alert('Deployment criado com sucesso!');
             return response.data;
         } catch (error) {
-            console.error('Erro ao criar deployment:', error.response ? error.response.data : error.message);
+            // Verifica se é um erro do Axios (com .response)
+            if (axios.isAxiosError(error)) {
+                console.error('Erro ao criar deployment:', error.response?.data || error.message);
+            } else if (error instanceof Error) {
+                // É um erro nativo do JavaScript
+                console.error('Erro ao criar deployment:', error.message);
+            } else {
+                // É algo inesperado (string, número, etc.)
+                console.error('Erro ao criar deployment:', error);
+            }
             throw error;
         }
     };
@@ -269,7 +280,16 @@ export default function Home() {
             //alert('Serviço criado com sucesso!');
             return response.data;
         } catch (error) {
-            console.error('Erro ao expor serviço:', error.response ? error.response.data : error.message);
+            // Verifica se é um erro do Axios (com .response)
+            if (axios.isAxiosError(error)) {
+                console.error('Erro ao expor serviço:', error.response?.data || error.message);
+            } else if (error instanceof Error) {
+                // É um erro nativo do JavaScript
+                console.error('Erro ao expor serviço:', error.message);
+            } else {
+                // É algo inesperado (string, número, etc.)
+                console.error('Erro ao expor serviço:', error);
+            }
             throw error;
         }
     };
@@ -290,7 +310,18 @@ export default function Home() {
             fetchData();
             setLoading(false);
         } catch (error) {
-            console.error('Erro ao criar deployment e serviço:', error.response ? error.response.data : error.message);
+            // Verifica se é um erro do Axios (com .response)
+            if (axios.isAxiosError(error)) {
+                console.error('Erro ao criar deployment e serviço:', error.response?.data || error.message);
+            } else if (error instanceof Error) {
+                // É um erro nativo do JavaScript
+                console.error('Erro ao criar deployment e serviço:', error.message);
+            } else {
+                // É algo inesperado (string, número, etc.)
+                console.error('Erro ao criar deployment e serviço:', error);
+            }
+            throw error;
+
         }
     }
 
@@ -302,7 +333,17 @@ export default function Home() {
 
             console.log(response.data);
         } catch (error) {
-            console.error('Erro ao listar deployments:', error.response ? error.response.data : error.message);
+            // Verifica se é um erro do Axios (com .response)
+            if (axios.isAxiosError(error)) {
+                console.error('Erro ao listar deployments:', error.response?.data || error.message);
+            } else if (error instanceof Error) {
+                // É um erro nativo do JavaScript
+                console.error('Erro ao listar deployments:', error.message);
+            } else {
+                // É algo inesperado (string, número, etc.)
+                console.error('Erro ao listar deployments:', error);
+            }
+
             throw error;
         }
     };
@@ -314,7 +355,17 @@ export default function Home() {
 
             console.log(response.data);
         } catch (error) {
-            console.error('Erro ao listar serviços:', error.response ? error.response.data : error.message);
+
+            // Verifica se é um erro do Axios (com .response)
+            if (axios.isAxiosError(error)) {
+                console.error('Erro ao listar serviços:', error.response?.data || error.message);
+            } else if (error instanceof Error) {
+                // É um erro nativo do JavaScript
+                console.error('Erro ao listar serviços:', error.message);
+            } else {
+                // É algo inesperado (string, número, etc.)
+                console.error('Erro ao listar serviços:', error);
+            }
             throw error;
         }
     };
@@ -325,7 +376,16 @@ export default function Home() {
             //alert('Deployment deletado com sucesso!');
             console.log(response.data);
         } catch (error) {
-            console.error('Erro ao deletar deployments:', error.response ? error.response.data : error.message);
+             // Verifica se é um erro do Axios (com .response)
+            if (axios.isAxiosError(error)) {
+                console.error('Erro ao deletar deployments:', error.response?.data || error.message);
+            } else if (error instanceof Error) {
+                // É um erro nativo do JavaScript
+                console.error('Erro ao deletar deployments:', error.message);
+            } else {
+                // É algo inesperado (string, número, etc.)
+                console.error('Erro ao deletar deployments:', error);
+            }
             throw error;
         }
     };
@@ -336,7 +396,16 @@ export default function Home() {
             //alert('Serviço deletado com sucesso!');
             console.log(response.data);
         } catch (error) {
-            console.error('Erro ao deletar serviços:', error.response ? error.response.data : error.message);
+              // Verifica se é um erro do Axios (com .response)
+            if (axios.isAxiosError(error)) {
+                console.error('Erro ao deletar serviços:', error.response?.data || error.message);
+            } else if (error instanceof Error) {
+                // É um erro nativo do JavaScript
+                console.error('Erro ao deletar serviços:', error.message);
+            } else {
+                // É algo inesperado (string, número, etc.)
+                console.error('Erro ao deletar serviços:', error);
+            }
             throw error;
         }
     };
@@ -491,7 +560,7 @@ export default function Home() {
                         </div>
 
                     )}
-                    
+
 
                 </div>
 
@@ -502,16 +571,16 @@ export default function Home() {
                         onClick={iniciar}
                     >Iniciar Sistema</Button>
                     <span
-                                    style={{
-                                        color: loading ? '#f44336' : '#4CAF50',
-                                    }}
-                                >
-                                    {loading ? '🔴 Sistema Iniciando...' : '🔴 Sistema Desconectado'}
+                        style={{
+                            color: loading ? '#f44336' : '#4CAF50',
+                        }}
+                    >
+                        {loading ? '🔴 Sistema Iniciando...' : '🔴 Sistema Desconectado'}
 
-                                </span>
+                    </span>
                 </div>
             )}
-            
+
         </div>
     );
 }

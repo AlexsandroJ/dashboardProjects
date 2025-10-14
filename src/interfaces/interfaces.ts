@@ -1,4 +1,47 @@
 // src/types/userTypes.ts
+export interface DeploymentData {
+  apiVersion: string;
+  kind: string;
+  metadata: {
+    name: string;
+  };
+  spec: {
+    replicas: number;
+    selector: {
+      matchLabels: Record<string, string>;
+    };
+    template: {
+      metadata: {
+        labels: Record<string, string>;
+      };
+      spec: {
+        containers: {
+          name: string;
+          image: string;
+          ports: { containerPort: number }[];
+          env: { name: string | null | undefined; value: string | null | undefined }[];
+        }[];
+      };
+    };
+  };
+}
+
+export interface ServiceData {
+  apiVersion: string;
+  kind: string;
+  metadata: {
+    name: string;
+  };
+  spec: {
+    type: string;
+    selector: Record<string, string>;
+    ports: {
+      protocol: string;
+      port: number;
+      targetPort: number;
+    }[];
+  };
+}
 
 export interface Item {
   name: string;
