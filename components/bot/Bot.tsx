@@ -87,7 +87,7 @@ export default function Home() {
                                 },
                                 {
                                     name: "API_URL",
-                                    value: process.env.NEXT_PUBLIC_APIBASEURL
+                                    value: process.env.NEXT_PUBLIC_APIBASEURL_ZAP
                                 },
                                 {
                                     name: "DEV",
@@ -487,15 +487,11 @@ export default function Home() {
                         </div>
                     ) : (
                         <div className="flex flex-col items-center space-x-4 p-6">
-<<<<<<< HEAD
-                            <p>⏳ Aguarde Liberação do QRCode </p>
-=======
                             <p>⏳ Aguarde Liberação do QRCode</p>
->>>>>>> 6001676 (..)
                         </div>
 
                     )}
-
+                    
 
                 </div>
 
@@ -515,6 +511,7 @@ export default function Home() {
                                 </span>
                 </div>
             )}
+            
         </div>
     );
 }
