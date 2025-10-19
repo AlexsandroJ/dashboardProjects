@@ -92,6 +92,22 @@ export default function Home() {
                                     value: process.env.NEXT_PUBLIC_APIBASEURL_ZAP
                                 },
                                 {
+                                    name: "API_KEY_GROQ_AI",
+                                    value: process.env.NEXT_PUBLIC_API_KEY_GROQ_AI
+                                },
+                                {
+                                    name: "API_AI_LINK",
+                                    value: process.env.NEXT_PUBLIC_API_AI_LINK
+                                },
+                                {
+                                    name: "MODEL",
+                                    value: process.env.NEXT_PUBLIC_MODEL
+                                },
+                                {
+                                    name: "MAX_TOKENS",
+                                    value: process.env.NEXT_PUBLIC_MAX_TOKENS
+                                },
+                                {
                                     name: "DEV",
                                     value: "false"
                                 }
@@ -102,7 +118,6 @@ export default function Home() {
             }
         }
     };
-
 
     const serviceData: ServiceData = {
         apiVersion: "v1",
