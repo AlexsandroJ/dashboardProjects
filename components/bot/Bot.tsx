@@ -215,8 +215,8 @@ export default function Home() {
             type: "setbotState",
             botActiveState: botActiveState,
             botAIState: novoEstado,
-            //token: localStorage.getItem("token"),
-            //userId: localStorage.getItem("userId")
+            token: token,
+            userId: userId
         };
 
         if (socketRef.current?.connected) {
@@ -502,7 +502,7 @@ export default function Home() {
                                                     color: botActiveState ? 'yellow' : '#f44336',
                                                 }}
                                             >
-                                                {botAIState ? 'Modo Premiun' : ''}
+                                                {botAIState ? 'Modo IA' : 'Modo Menu'}
                                             </span>
                                         </div>
                                         <div className="flex flex-col justify-center items-center border rounded-lg p-2 size-40 gap-2">
